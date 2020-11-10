@@ -1,0 +1,38 @@
+{
+  "name": "@abk/utils",
+  "version": "0.0.9",
+  "description": "爱贝壳项目组工具包",
+  "keywords": [
+    "utils",
+    "axios",
+    "loading",
+    "loadScript"
+  ],
+  "main": "index.js",
+  "scripts": {
+    "dev": "webpack-dev-server --open",
+    "build": "webpack",
+    "lib": "webpack",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "axios": "^0.20.0",
+    "core-js": "^3.6.5",
+    "mockjs": "^1.1.0",
+    "qs": "^6.9.4"
+  },
+  "author": "fengraoyin",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.11.5",
+    "@babel/plugin-proposal-class-properties": "^7.12.1",
+    "@babel/preset-env": "^7.11.5",
+    "babel-loader": "^8.1.0",
+    "clean-webpack-plugin": "^3.0.0",
+    "eslint": "^7.8.0",
+    "html-webpack-plugin": "^4.4.1",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0"
+  }
+}
