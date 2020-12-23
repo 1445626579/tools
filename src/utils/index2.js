@@ -1,5 +1,4 @@
 import loading from "./loading";
-import axios from "axios";
 const Loading = loading();
 // 公共方法
 export function loadScript(url, callback) {
@@ -207,130 +206,10 @@ export function formatDate(format = "YYYY-MM-DD", time) {
     week() {
       const week = ["日", "一", "二", "三", "四", "五", "六"];
       return week[date.getDay()];
-    },
+    }
   };
-  return format.replace(/Y{4}|M{2}|D{2}|h{2}|m{2}|s{2}|week/g, (key) => {
+  return format.replace(/Y{4}|M{2}|D{2}|h{2}|m{2}|s{2}|week/g, key => {
     const value = flags[key].call(date);
     return typeof value !== "number" || value > 9 ? value : "0" + value;
-  });
-}
-/**
- * 获取osstoken
- * @param {String} env NODE_NENV
- * @param {String} token
- * @param {String} orgId 机构id
- */
-const BASEURL = {
-  development: "https://gateway-dev.jiaoyanyun.com/saas/aliOss/getOssToken",
-  fz: "https://gateway-fz.jiaoyanyun.com/saas/aliOss/getOssToken",
-  production: "https://gateway.jiaoyanyun.com/saas/aliOss/getOssToken",
-};
-export function getOssToken(env, token, orgId) {
-  return axios({
-    url: BASEURL[env],
-    header: {
-      "web-token": token,
-    },
-    method: "post",
-    data: { orgId: orgId || "94c703806fa14c708ef36e934343ac45" },
-  });
-}
-// 获取文件类型
-export function folderName(val) {
-  let type = "";
-  switch (val) {
-    case "mp4":
-      type = "video";
-      break;
-    case "mp3":
-      type = "audio";
-      break;
-    case "docx":
-      type = "doc";
-      break;
-    case "pptx":
-      type = "ppt";
-      break;
-    case "xlsx":
-      type = "xls";
-      break;
-    case "png":
-    case "svg":
-    case "gif":
-    case "jpeg":
-    case "jpg":
-      type = "img";
-      break;
-    default:
-      type=val
-  }
-  return type;
-}
-/**
- * 返回格式2020/09/27
- */
-export function getDate() {
-  const date = new Date();
-  return (
-    date.getFullYear() +
-    "-" +
-    (Number(date.getMonth()) + 1) +
-    "-" +
-    date.getDate() +
-    "/"
-  );
-}
-// fromData上传
-/**
- *
- * @param {Object} config 上传设置
- *  @property {String} env 环境变量
- */
-export async function ossUpload(data) {
-  const { env, token, orgId, file } = data;
-  let res = await getOssToken(env, token, orgId);
-  let url=await uploaFile(res,file)
-  return url
-}
-
-export function uploaFile(res,file){
-  const {
-    uniqueName,
-    accessid,
-    dir,
-    host,
-    policy,
-    signature,
-    cdnHost,
-  } = res.data.data;
-  const formData = new FormData();
-  const datatime = getDate();
-  console.log(file, "file");
-  const fileType = file.type.split("/")[1];
-  const key =
-    dir + datatime + folderName(fileType) + "/" + uniqueName + "." + fileType;
-  formData.append("name", uniqueName);
-  formData.append("key", key);
-  formData.append("policy", policy);
-  formData.append("OSSAccessKeyId", accessid);
-  formData.append("success_action_status", 200);
-  formData.append("signature", signature);
-  formData.append("file", file);
-  formData.append("Content-Disposition", "");
-  return new Promise((resolve, reject) => {
-    axios({
-      url: host,
-      header: {
-        "Content-Type": "multipart/form-data",
-      },
-      method: "post",
-      data: formData,
-    })
-      .then(() => {
-        resolve(cdnHost + "/" + key);
-      })
-      .catch(() => {
-        reject("失败了");
-      });
   });
 }

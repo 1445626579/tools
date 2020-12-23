@@ -1,34 +1,41 @@
-const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const webpack = require('webpack');
+const path = require("path");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const webpack = require("webpack");
 module.exports = {
-  entry:
-  {
-    index: './src/main.js',
-    http:'./src/http/index.js'
+  entry: {
+    index: "./src/main.ts",
+    http: "./src/http/index.ts"
   },
   output: {
-    path: path.resolve(__dirname, 'packages'),
-    filename: '[name].js',
+    path: path.resolve(__dirname, "packages"),
+    filename: "[name].js",
     libraryTarget: "umd"
   },
   module: {
     rules: [
       {
-      test: /\.js$/,
-      exclude: /(node_modules|bower_components)/,
-      use: {
-        loader: 'babel-loader',
-        options: {
-          presets: ['@babel/preset-env'],
-          plugins: ['@babel/plugin-proposal-class-properties']
+        test: /\.tsx?$/,
+        exclude: /(node_modules)/,
+        loader: "ts-loader"
+      },
+      {
+        test: /\.js$/,
+        exclude: /(node_modules)/,
+        use: {
+          loader: "babel-loader",
+          options: {
+            presets: ["@babel/preset-env"],
+            plugins: ["@babel/plugin-proposal-class-properties"]
+          }
         }
       }
-    }
     ]
   },
-  devtool: 'inline-source-map',
+  resolve: {
+    extensions: [".js", ".ts"]
+  },
+  devtool: "inline-source-map",
   devServer: {
     contentBase: path.join(__dirname, "dist"),
     compress: true,
@@ -38,7 +45,7 @@ module.exports = {
   plugins: [
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
-      title: 'beike-utils'
+      title: "beike-utils"
     }),
     new webpack.HotModuleReplacementPlugin()
   ]
