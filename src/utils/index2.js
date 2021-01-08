@@ -213,3 +213,56 @@ export function formatDate(format = "YYYY-MM-DD", time) {
     return typeof value !== "number" || value > 9 ? value : "0" + value;
   });
 }
+export function customTimeout (fn,time=0,...rest) {
+  let start = 0;
+  let cancel = false
+  const initFn = (timestap) => {
+    if (start === 0) {
+      start = timestap
+    }
+    const interval = timestap - start;
+    if (cancel) {
+      return
+    }
+    if (interval > time) {
+      window.requestAnimationFrame(() => { fn(...rest) });
+    } else {
+      window.requestAnimationFrame(initFn);
+    }
+  }
+  window.requestAnimationFrame(initFn);
+  return {
+    cancle () {
+      cancel = true
+    }
+  }
+}
+export function customInterval (fn,time,...rest) {
+  let start = 0;
+  let cancel = false;
+  function callback() {
+    fn(...rest);
+    window.requestAnimationFrame(initFn)
+  }
+  function initFn  (timestap) {
+    if (start === 0) {
+      start = timestap
+    }
+    if (cancel) {
+      return
+    }
+    const interval = timestap - start
+    if (interval > time) {
+      window.requestAnimationFrame(callback);
+      start = timestap
+    } else {
+      window.requestAnimationFrame(initFn);
+    }
+  }
+  window.requestAnimationFrame(initFn);
+  return {
+    cancel () {
+      cancel = true
+    }
+  }
+}
