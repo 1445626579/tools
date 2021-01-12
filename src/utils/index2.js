@@ -213,6 +213,18 @@ export function formatDate(format = "YYYY-MM-DD", time) {
     return typeof value !== "number" || value > 9 ? value : "0" + value;
   });
 }
+/**
+ * 自定义定时器
+ * 使用requestAnimationFrame实现，当需要离开页面暂停时或者批量DOM操作、重排重绘时，效果比setTimeout或setInterval要好
+ * 自定义定时器不属于宏任务也不是微任务，会在浏览器下次重绘前调用
+ * requestAnimation说明：https://developer.mozilla.org/zh-CN/docs/Web/API/Window/requestAnimationFrame
+ * @param {Function} fn 定时器回调函数
+ * @param { number } time 定时器执行间隔
+ * @param  {any} rest 定时器回调函数的参数
+ * @returns { Object } 返回定时器的取消方法 
+ * const timer = customTimeout(console.log,1000,1);
+ * timer.cancel() 取消定时器
+ */
 export function customTimeout (fn,time=0,...rest) {
   let start = 0;
   let cancel = false
@@ -237,6 +249,18 @@ export function customTimeout (fn,time=0,...rest) {
     }
   }
 }
+/**
+ * 自定义定时器
+ * 使用requestAnimationFrame实现，当需要离开页面暂停时或者批量DOM操作、重排重绘时，效果比setTimeout或setInterval要好
+ * 自定义定时器不属于宏任务也不是微任务，会在浏览器下次重绘前调用
+ * requestAnimation说明：https://developer.mozilla.org/zh-CN/docs/Web/API/Window/requestAnimationFrame
+ * @param {Function} fn 定时器回调函数
+ * @param { number } time 定时器执行间隔
+ * @param  {any} rest 定时器回调函数的参数
+ * @returns { Object } 返回定时器的取消方法 
+ * const timer = customInterval(console.log,1000,1);
+ * timer.cancel() 取消定时器
+ */
 export function customInterval (fn,time,...rest) {
   let start = 0;
   let cancel = false;
