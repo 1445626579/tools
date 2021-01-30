@@ -1,0 +1,14 @@
+// 单行超出隐藏
+@mixin nowrap {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+// 多行超出隐藏
+@mixin multiline-hide($line: 2) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: $line; /*限制文本行数*/
+  -webkit-box-orient: vertical;
+}
