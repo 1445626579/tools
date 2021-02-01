@@ -83,26 +83,57 @@ export function promiseDebounce(promise) {
   if (typeof promise !== "function") {
     return Promise.reject(new Error("入参非函数"));
   }
-  return (...rest) => {
+  return function () {
+    const context = this
+    const arg = arguments
     if (isLoading) return Promise.reject("loading...");
     isLoading = true;
-    return promise(...rest).finally(() => {
+    return promise.apply(context, arg).finally(() => {
       isLoading = false;
     });
   };
 }
 /**
+ * 计数器loading
+ * counter值为1时可以隐藏
+ * counter值为0时执行展示
+ * @param Loading 
+ */
+export function countLoading(Loading = loading()) {
+  let counter = 0;
+  return {
+    show() {
+      if (counter === 0) Loading.show();
+      counter++;
+    },
+    hide() {
+      switch (counter) {
+        case 0: return;
+        case 1:
+          Loading.hide();
+      }
+      counter--;
+    },
+    forceHide() {
+      Loading.hide();
+      counter = 0;
+    }
+  }
+}
+/**
  * 异步loading函数
  * @param {function} promise 返回值为promise的函数
  */
-export function promiseLoading(promise) {
+export function promiseLoading(promise, loading) {
+  loading = loading || countLoading()
   if (typeof promise !== "function") {
     return Promise.reject(new Error("入参非函数"));
   }
-  return (...rest) => {
-    Loading.show();
-    return promise(...rest).finally(() => {
-      Loading.hide();
+  return function () {
+    const _this = this;
+    loading.show();
+    return promise.apply(_this, arguments).finally(() => {
+      loading.hide();
     });
   };
 }
